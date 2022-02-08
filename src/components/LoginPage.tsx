@@ -6,13 +6,25 @@ import { MdEmail } from "react-icons/md";
 import { IoIosLock } from "react-icons/io";
 import { BsCloudSunFill, BsFillCloudMoonFill } from "react-icons/bs";
 import "./LoginPage.css";
+import { UserData } from "./Login.interface";
 
+// const urlString = "http://localhost:3050/api/v1/users/login";
 const LoginPage = (): JSX.Element => {
   const [isLight, setIsLight] = useState(true);
+  const [form, setForm] = useState<UserData>({ email: "", password: "" });
   const focusPoint = useRef<HTMLInputElement>(null);
   const setLightMode = () => {
     setIsLight(!isLight);
     return document.body.classList.toggle("dark-mode");
+  };
+
+  // const handleSubmit = () => {};
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const name = e.currentTarget.name;
+    const value = e.currentTarget.value;
+    const newData = { [name]: value };
+    const data = { ...form, newData };
+    setForm(data);
   };
 
   useEffect(() => {
@@ -38,11 +50,24 @@ const LoginPage = (): JSX.Element => {
       <div className="form">
         <div className="format-box">
           <MdEmail className="email-icon" />
-          <input type="text" ref={focusPoint} placeholder="Email" />
+          <input
+            type="text"
+            value={form.email}
+            ref={focusPoint}
+            name="email"
+            onChange={handleChange}
+            placeholder="Email"
+          />
         </div>
         <div className="format-box">
           <IoIosLock className="lock-pass" />
-          <input type="text" placeholder="Password" />
+          <input
+            type="text"
+            value={form.password}
+            name="password"
+            onChange={handleChange}
+            placeholder="Password"
+          />
         </div>
         <button>Login</button>
       </div>
