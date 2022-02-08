@@ -20,12 +20,12 @@ const LoginPage = (): JSX.Element => {
 
   // const handleSubmit = () => {};
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const name = e.currentTarget.name;
-    const value = e.currentTarget.value;
-    const newData = { [name]: value };
-    const data = { ...form, newData };
-    setForm(data);
+    let name: string = e.currentTarget.name;
+    let value: string = e.currentTarget.value;
+    const newData = { ...form, [name]: value };
+    setForm(newData);
   };
+  console.log(form);
 
   useEffect(() => {
     if (focusPoint.current) {
