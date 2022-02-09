@@ -12,6 +12,8 @@ import { UserData } from "./Login.interface";
 const LoginPage = (): JSX.Element => {
   const [isLight, setIsLight] = useState(true);
   const [form, setForm] = useState<UserData>({ email: "", password: "" });
+  // const [showError, setShowError] = useState<boolean>(false);
+
   const focusPoint = useRef<HTMLInputElement>(null);
   const focusPoint2 = useRef<HTMLInputElement>(null);
   const setLightMode = () => {
@@ -80,7 +82,7 @@ const LoginPage = (): JSX.Element => {
         <div className="format-box">
           <IoIosLock className="lock-pass" />
           <input
-            type="text"
+            type="password"
             value={form.password}
             ref={focusPoint2}
             name="password"
