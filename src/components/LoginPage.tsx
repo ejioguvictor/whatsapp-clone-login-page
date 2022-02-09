@@ -13,12 +13,30 @@ const LoginPage = (): JSX.Element => {
   const [isLight, setIsLight] = useState(true);
   const [form, setForm] = useState<UserData>({ email: "", password: "" });
   const focusPoint = useRef<HTMLInputElement>(null);
+  const focusPoint2 = useRef<HTMLInputElement>(null);
   const setLightMode = () => {
     setIsLight(!isLight);
     return document.body.classList.toggle("dark-mode");
   };
 
-  // const handleSubmit = () => {};
+  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (!form.email) {
+      focusPoint.current!.style.border = "1.5px solid red";
+      setTimeout(
+        () => (focusPoint.current!.style.border = "1px solid #bdbdbd"),
+        3000
+      );
+    }
+    if (!form.password) {
+      focusPoint2.current!.style.border = "1.5px solid red";
+      setTimeout(
+        () => (focusPoint2.current!.style.border = "1px solid #bdbdbd"),
+        3000
+      );
+    }
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let name: string = e.currentTarget.name;
     let value: string = e.currentTarget.value;
@@ -64,12 +82,13 @@ const LoginPage = (): JSX.Element => {
           <input
             type="text"
             value={form.password}
+            ref={focusPoint2}
             name="password"
             onChange={handleChange}
             placeholder="Password"
           />
         </div>
-        <button>Login</button>
+        <button onClick={handleSubmit}> Login </button>
       </div>
       <p>or continue with these social profile</p>
       <div className="social-logins">
