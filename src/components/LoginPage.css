@@ -161,3 +161,9 @@ a {
 .fillmoon {
   color: #252329;
 }
+
+.error-class {
+  color: red;
+  position: absolute;
+  top: 8rem;
+}

@@ -7,12 +7,14 @@ import { IoIosLock } from "react-icons/io";
 import { BsCloudSunFill, BsFillCloudMoonFill } from "react-icons/bs";
 import "./LoginPage.css";
 import { UserData } from "./Login.interface";
+import axios from "axios";
 
-// const urlString = "http://localhost:3050/api/v1/users/login";
+const url: string = "http://localhost:3050/api/v1/users/login";
 const LoginPage = (): JSX.Element => {
   const [isLight, setIsLight] = useState(true);
   const [form, setForm] = useState<UserData>({ email: "", password: "" });
-  // const [showError, setShowError] = useState<boolean>(false);
+  const [showError, setShowError] = useState<boolean>(false);
+  const [errorMsg, setErrorMsg] = useState<string>("");
 
   const focusPoint = useRef<HTMLInputElement>(null);
   const focusPoint2 = useRef<HTMLInputElement>(null);
@@ -21,7 +23,7 @@ const LoginPage = (): JSX.Element => {
     return document.body.classList.toggle("dark-mode");
   };
 
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (!form.email) {
       focusPoint.current!.style.border = "1.5px solid red";
@@ -36,6 +38,19 @@ const LoginPage = (): JSX.Element => {
         () => (focusPoint2.current!.style.border = "1px solid #bdbdbd"),
         3000
       );
+    }
+    const response = await axios.post(url, { ...form });
+    console.log(response);
+    if (response.status === 201) {
+      alert(`${response.data.message}`);
+    } else {
+      if (typeof response.data === "object") {
+        setErrorMsg(response.data.message);
+        setShowError(true);
+      } else {
+        setErrorMsg(response.data);
+        setShowError(true);
+      }
     }
   };
 
@@ -67,6 +82,7 @@ const LoginPage = (): JSX.Element => {
         <h4>Whatsapp</h4>
       </div>
       <h2>Login</h2>
+      {showError && <p className="error-class">{errorMsg}</p>}
       <div className="form">
         <div className="format-box">
           <MdEmail className="email-icon" />
