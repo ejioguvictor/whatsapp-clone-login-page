@@ -6,7 +6,7 @@ import { MdEmail } from "react-icons/md";
 import { IoIosLock } from "react-icons/io";
 import { BsCloudSunFill, BsFillCloudMoonFill } from "react-icons/bs";
 import styles from "./LoginPage.module.scss";
-import { UserData } from "./Login.interface";
+import { UserData } from "./LoginPage.interface";
 
 const url: string = "http://localhost:3050/api/v1/user/login";
 const LoginPage = (): JSX.Element => {
