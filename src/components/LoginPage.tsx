@@ -5,22 +5,23 @@ import { GrFacebook } from "react-icons/gr";
 import { MdEmail } from "react-icons/md";
 import { IoIosLock } from "react-icons/io";
 import { BsCloudSunFill, BsFillCloudMoonFill } from "react-icons/bs";
-import "./LoginPage.css";
+import styles from "./LoginPage.module.scss";
 import { UserData } from "./Login.interface";
-import axios from "axios";
 
-const url: string = "http://localhost:3050/api/v1/users/login";
+const url: string = "http://localhost:3050/api/v1/user/login";
 const LoginPage = (): JSX.Element => {
   const [isLight, setIsLight] = useState(true);
   const [form, setForm] = useState<UserData>({ email: "", password: "" });
   const [showError, setShowError] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string>("");
+  // const [rememberMe, setRememberMe] = useState(true);
 
   const focusPoint = useRef<HTMLInputElement>(null);
   const focusPoint2 = useRef<HTMLInputElement>(null);
   const setLightMode = () => {
     setIsLight(!isLight);
-    return document.body.classList.toggle("dark-mode");
+    // return document.body.classList.toggle(styles.darkMode);
+    return document.body.classList.toggle(`${styles.darkMode}`);
   };
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -39,18 +40,32 @@ const LoginPage = (): JSX.Element => {
         3000
       );
     }
-    const response = await axios.post(url, { ...form });
-    console.log(response);
-    if (response.status === 201) {
-      alert(`${response.data.message}`);
-    } else {
-      if (typeof response.data === "object") {
-        setErrorMsg(response.data.message);
-        setShowError(true);
-      } else {
-        setErrorMsg(response.data);
-        setShowError(true);
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (response.status === 201) {
+        const data = await response.json();
+        alert(data.message);
       }
+      if (response.status === 400) {
+        const data = await response.text();
+        setErrorMsg(data);
+        setShowError(true);
+        setTimeout(() => setShowError(false), 3000);
+      }
+      if (response.status === 403) {
+        const data = await response.json();
+        setErrorMsg(data.message);
+        setShowError(true);
+        setTimeout(() => setShowError(false), 3000);
+      }
+      console.log(response);
+    } catch (err: any) {
+      console.error(err);
     }
   };
 
@@ -60,7 +75,6 @@ const LoginPage = (): JSX.Element => {
     const newData = { ...form, [name]: value };
     setForm(newData);
   };
-  console.log(form);
 
   useEffect(() => {
     if (focusPoint.current) {
@@ -70,33 +84,40 @@ const LoginPage = (): JSX.Element => {
   }, [focusPoint]);
 
   return (
-    <div className="box-container">
+    <div className={styles["box-container"]}>
       {!isLight && (
-        <BsCloudSunFill className="sun fillsun" onClick={setLightMode} />
+        <BsCloudSunFill
+          className={`${styles.sun} ${styles.fillsun}`}
+          onClick={setLightMode}
+        />
       )}
       {isLight && (
-        <BsFillCloudMoonFill className="sun fillmoon" onClick={setLightMode} />
+        <BsFillCloudMoonFill
+          className={`${styles.sun} ${styles.fillmoon}`}
+          onClick={setLightMode}
+        />
       )}
-      <div className="logo-head">
+      <div className={styles["logo-head"]}>
         <BsWhatsapp />
         <h4>Whatsapp</h4>
       </div>
       <h2>Login</h2>
-      {showError && <p className="error-class">{errorMsg}</p>}
-      <div className="form">
-        <div className="format-box">
-          <MdEmail className="email-icon" />
+      {showError && <p className={styles["error-class"]}>{errorMsg}</p>}
+      <div className={styles.form}>
+        <div className={styles["format-box"]}>
+          <MdEmail className={styles["email-icon"]} />
           <input
-            type="text"
+            type="email"
             value={form.email}
             ref={focusPoint}
             name="email"
             onChange={handleChange}
             placeholder="Email"
+            required
           />
         </div>
-        <div className="format-box">
-          <IoIosLock className="lock-pass" />
+        <div className={styles["format-box"]}>
+          <IoIosLock className={styles["lock-pass"]} />
           <input
             type="password"
             value={form.password}
@@ -104,31 +125,34 @@ const LoginPage = (): JSX.Element => {
             name="password"
             onChange={handleChange}
             placeholder="Password"
+            required
           />
         </div>
+
         <button onClick={handleSubmit}> Login </button>
       </div>
+
       <p>or continue with these social profile</p>
-      <div className="social-logins">
-        <div className="social-circle">
+      <div className={styles["social-logins"]}>
+        <div className={styles["social-circle"]}>
           <div>
             <FaGoogle />
           </div>
         </div>
 
-        <div className="social-circle">
+        <div className={styles["social-circle"]}>
           <div>
             <GrFacebook />
           </div>
         </div>
 
-        <div className="social-circle">
+        <div className={styles["social-circle"]}>
           <div>
             <BsTwitter />
           </div>
         </div>
 
-        <div className="social-circle">
+        <div className={styles["social-circle"]}>
           <div>
             <BsGithub />
           </div>
@@ -137,7 +161,7 @@ const LoginPage = (): JSX.Element => {
       <p>
         Dont't have an account yet? <a href="/SignUp">Register </a>
       </p>
-      <p className="forogt-password">
+      <p className={styles["forogt-password"]}>
         <a href="/forgotPassword">Forgot Password ?</a>
       </p>
     </div>

@@ -9,7 +9,7 @@
   --secondary-color: white;
   --tertiary-color: black;
 }
-.dark-mode {
+.darkMode {
   --primary-color: white;
   --secondary-color: #252329;
   --tertiary-color: #000000;
@@ -30,6 +30,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  position: relative;
 }
 .logo-head {
   display: flex;
@@ -90,7 +91,7 @@ button:hover {
 }
 
 p {
-  height: 19px;
+  // height: 19px;
   margin: 0 auto;
   width: fit-content;
   font-size: 14px;
@@ -145,7 +146,7 @@ a {
 }
 
 .sun {
-  color: var(--sun-color);
+  // color: var(--sun-color);
   height: 2rem;
   width: auto;
   position: fixed;
